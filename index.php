@@ -7,6 +7,8 @@
     </head>
     <body>
         <header>
+            <nav class="top-nav">
+            </nav>
             <h1 class="center-align">86 BUS</h1>
         </header>
         <main>
