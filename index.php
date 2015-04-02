@@ -14,8 +14,8 @@
         <main>
             <div class="container section">
                 <div class="row center-align">
-                    <section class="col s6"><a class="waves-effect waves-light btn-large"><i class="mdi-maps-directions-bus left"></i>To Cleveland Circle</a></section>
-                    <section class="col s6"><a class="waves-effect waves-light btn-large"><i class="mdi-maps-directions-bus left"></i>To Sullivan Station</a></section>
+                    <section class="col s6"><a class="waves-effect waves-light btn-large teal darken-1"><i class="mdi-maps-directions-bus left"></i>To Cleveland Circle</a></section>
+                    <section class="col s6"><a class="waves-effect waves-light btn-large teal lighten-2"><i class="mdi-maps-directions-bus left"></i>To Sullivan Station</a></section>
                     <table class="col s12 hoverable bordered">
                         <thead>
                             <tr>
