@@ -14,8 +14,8 @@
         <main>
             <div class="container section">
                 <div class="row center-align">
-                    <section class="col s6"><a class="waves-effect waves-light btn-large teal darken-1"><i class="mdi-maps-directions-bus left"></i>To Cleveland Circle</a></section>
-                    <section class="col s6"><a class="waves-effect waves-light btn-large teal lighten-2"><i class="mdi-maps-directions-bus left"></i>To Sullivan Station</a></section>
+                    <section class="col s6"><button id="inbound" class="waves-effect waves-light btn-large teal darken-1"><i class="mdi-maps-directions-bus left"></i>To Cleveland Circle</button></section>
+                    <section class="col s6"><button id="outbound" class="waves-effect waves-light btn-large teal lighten-2"><i class="mdi-maps-directions-bus left"></i>To Sullivan Station</button></section>
                     <table class="col s12 hoverable bordered">
                         <thead>
                             <tr>
@@ -73,6 +73,7 @@
         <!--Import jQuery before materialize.js-->
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
         <script type="text/javascript" src="js/materialize.min.js"></script>
-        <script src="js/geolocation.js" type="text/javascript"></script>
+        <!--<script src="js/geolocation.js" type="text/javascript"></script>-->
+        <script src="js/direction.js" type="text/javascript"></script>
     </body>
 </html>
