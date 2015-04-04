@@ -16,6 +16,12 @@
 //      Transform sch_arr_dt (schedule arrival time in epoch time)
 //      Transform pre_away (predicted arrivel time in seconds) 
 //      Get bus current location vehicle_lat and vehicle_lon
+//      
+//After getting all three json feeds, I have to make several calculations:
+//  Ideally, I would store the contents of the Stops by Route response in a file, Stops will not change very frecuently on the 86 route.
+//      Compare the file ocasionally in order to make sure that there are no changes in the route
+//  Using Stops by Location, get closest station, stops_id (index 0 in the stops array). Compare stops_id from stops by location with stops_id's from outbound and inboound
+//  stops by route.
 //
 error_reporting(E_ALL);
 require_once 'settings.php';
@@ -42,6 +48,38 @@ curl_close($ch);
 return $data;
 }
 
+
+echo "********\n";
+$data = get_data($stops_by_location);
+$bus_array = json_decode($data,true);
+$stop_location_stop_id = array_column($bus_array['stop'], 'stop_id');
+echo 'Stops by Location';
+echo '<pre>';
+print_r($bus_array);
+echo '*********Location Stops IDs ';
+print_r($stop_location_stop_id);
+echo '</pre>';
+
+echo "********\n";
+$data = get_data($stops_by_route);
+$bus_array = json_decode($data,true);
+$outbound_stop_id = array_column($bus_array['direction'][0]['stop'], 'stop_id');
+$inbound_stop_id = array_column($bus_array['direction'][1]['stop'], 'stop_id');
+$matches_outbound = array_intersect($outbound_stop_id, $stop_location_stop_id);
+$matches_inbound = array_intersect($inbound_stop_id, $stop_location_stop_id);
+echo 'Stops by Route';
+echo '<pre>';
+print_r($bus_array);
+echo '*********Outbound Stops IDs ';
+print_r($outbound_stop_id);
+echo '*********Inbound Stops IDs ';
+print_r($inbound_stop_id);
+echo '*********Matches Inbound Stops IDs ';
+print_r($matches_inbound);
+echo '*********Matches Outbound Stops IDs ';
+print_r($matches_outbound);
+echo '</pre>';
+
 $data = get_data($predictions_by_stop);
 //header('Content-Type: application/javascript');
 //var_dump($data);
@@ -52,21 +90,11 @@ $data = get_data($predictions_by_stop);
 //print_r($json);
 //echo "\n";
 $bus_array = json_decode($data,true);
+echo '************Predictions by Stop';
 echo '<pre>';
 print_r($bus_array);
 echo '</pre>';
 //echo "\n";
 //header('Content-Type: application/javascript');
 //echo "raveCallback(". $json.")";
-echo "********\n";
-$data = get_data($stops_by_route);
-$bus_array = json_decode($data,true);
-echo '<pre>';
-print_r($bus_array);
-echo '</pre>';
-echo "********\n";
-$data = get_data($stops_by_location);
-$bus_array = json_decode($data,true);
-echo '<pre>';
-print_r($bus_array);
-echo '</pre>';
+
