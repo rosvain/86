@@ -1,4 +1,5 @@
 <?php
+
 //Problem: get all the data about predicting the bus details according to directiona and closest stop
 //What I know:
 //  route:86, this is constant, it will never change
@@ -23,78 +24,39 @@
 //  Using Stops by Location, get closest station, stops_id (index 0 in the stops array). Compare stops_id from stops by location with stops_id's from outbound and inboound
 //  stops by route.
 //
-error_reporting(E_ALL);
-require_once 'settings.php';
-define('SYSTEM', 'test');
-define('ROUTE', '86');
-$latitude = '42.355375699999996';
-$longitude = '-71.149031';
-$stop = '1036';
-$settings = get_settings(SYSTEM);
-$stops_by_location = $settings['base_url'] . "stopsbylocation?api_key={$settings['token']}&lat={$latitude}&lon={$longitude}&format=json";
-$stops_by_route = $settings['base_url'] . "stopsbyroute?api_key={$settings['token']}&route={$settings['route']}&format=json";
-$predictions_by_stop = $settings['base_url'] . "predictionsbystop?api_key={$settings['token']}&stop={$stop}&format=json";
-//print_r($settings);
-//echo "<br/>";
-//echo $settings['token'];
- function get_data($url)
-{
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $url);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-$data = curl_exec($ch);
-curl_close($ch);
-return $data;
+function get_data($url) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    $data = curl_exec($ch);
+    curl_close($ch);
+    return $data;
 }
 
+function get_current_station($direction, $api_location, $api_route) {
+    $api_loc_result = get_data($api_location);
+    $api_rout_result = get_data($api_route);
+    $location_array = json_decode($api_loc_result, true);
+    $route_array = json_decode($api_rout_result, true);
+    $stop_location_stop_id = array_column($location_array['stop'], 'stop_id');
+    if ('Outbound' === $direction) {
+        $outbound_stop_id = array_column($route_array['direction'][0]['stop'], 'stop_id');
+        $matches_outbound = array_intersect($stop_location_stop_id, $outbound_stop_id);
+        $key = array_keys($matches_outbound);
+        return $location_array['stop'][$key[0]];
+    }
+    if ('Inbound' === $direction) {
+        $inbound_stop_id = array_column($route_array['direction'][1]['stop'], 'stop_id');
+        $matches_inbound = array_intersect($stop_location_stop_id, $inbound_stop_id);
+        $key = array_keys($matches_inbound);
+        return $location_array['stop'][$key[0]];
+    }
+}
 
-echo "********\n";
-$data = get_data($stops_by_location);
-$bus_array = json_decode($data,true);
-$stop_location_stop_id = array_column($bus_array['stop'], 'stop_id');
-echo 'Stops by Location';
-echo '<pre>';
-print_r($bus_array);
-echo '*********Location Stops IDs ';
-print_r($stop_location_stop_id);
-echo '</pre>';
-
-echo "********\n";
-$data = get_data($stops_by_route);
-$bus_array = json_decode($data,true);
-$outbound_stop_id = array_column($bus_array['direction'][0]['stop'], 'stop_id');
-$inbound_stop_id = array_column($bus_array['direction'][1]['stop'], 'stop_id');
-$matches_outbound = array_intersect($outbound_stop_id, $stop_location_stop_id);
-$matches_inbound = array_intersect($inbound_stop_id, $stop_location_stop_id);
-echo 'Stops by Route';
-echo '<pre>';
-print_r($bus_array);
-echo '*********Outbound Stops IDs ';
-print_r($outbound_stop_id);
-echo '*********Inbound Stops IDs ';
-print_r($inbound_stop_id);
-echo '*********Matches Inbound Stops IDs ';
-print_r($matches_inbound);
-echo '*********Matches Outbound Stops IDs ';
-print_r($matches_outbound);
-echo '</pre>';
-
-$data = get_data($predictions_by_stop);
-//header('Content-Type: application/javascript');
-//var_dump($data);
-//print_r($data);
-//cleaecho "\n";
-
-//$json = json_encode($data);
-//print_r($json);
-//echo "\n";
-$bus_array = json_decode($data,true);
-echo '************Predictions by Stop';
-echo '<pre>';
-print_r($bus_array);
-echo '</pre>';
-//echo "\n";
-//header('Content-Type: application/javascript');
-//echo "raveCallback(". $json.")";
-
+function get_prediction($api) {
+    $data = get_data($api);
+    $prediction_array = json_decode($data, true);
+    //return $prediction_array['mode'][0]['route'][0]['direction'][0]['trip'];
+    return $prediction_array;
+}
