@@ -24,6 +24,28 @@
 //  Using Stops by Location, get closest station, stops_id (index 0 in the stops array). Compare stops_id from stops by location with stops_id's from outbound and inboound
 //  stops by route.
 //
+
+function clean($array) {
+    if (!empty($array)) {
+        $clean['latitude'] = htmlentities($array['latitude'], ENT_QUOTES, "UTF-8");
+        $clean['longitude'] = htmlentities($array['longitude'], ENT_QUOTES, "UTF-8");
+        $clean['direction'] = htmlentities($array['direction'], ENT_QUOTES, "UTF-8");
+        return $clean;
+    }
+    return null;
+}
+
+function human_date($epoch_date) {
+    $epoch_date = (int)$epoch_date;
+    $human_date = new DateTime("@$epoch_date");
+    $human_date->setTimezone(new DateTimeZone('America/New_York'));
+    return $human_date->format('m-d-Y H:i:s');
+}
+
+function get_minutes($seconds){
+    $seconds = (int)$seconds;
+    return round($seconds/60,0, PHP_ROUND_HALF_DOWN);
+}
 function get_data($url) {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -55,8 +77,19 @@ function get_current_station($direction, $api_location, $api_route) {
 }
 
 function get_prediction($api) {
+    $prediction_data = array();
     $data = get_data($api);
     $prediction_array = json_decode($data, true);
-    //return $prediction_array['mode'][0]['route'][0]['direction'][0]['trip'];
-    return $prediction_array;
+    $prediction_data['sch_arr_dt'] = human_date($prediction_array['mode'][0]['route'][0]['direction'][0]['trip'][0]['sch_arr_dt']);
+    $prediction_data['pre_dt'] = human_date($prediction_array['mode'][0]['route'][0]['direction'][0]['trip'][0]['pre_dt']);
+    $prediction_data['pre_away'] = get_minutes($prediction_array['mode'][0]['route'][0]['direction'][0]['trip'][0]['pre_away']);
+    $prediction_data['vehicle_lat'] = $prediction_array['mode'][0]['route'][0]['direction'][0]['trip'][0]['vehicle']['vehicle_lat'];
+    $prediction_data['vehicle_lon'] = $prediction_array['mode'][0]['route'][0]['direction'][0]['trip'][0]['vehicle']['vehicle_lon'];
+    $prediction_data['alert'] = $prediction_array['alert_headers'];
+    //return $prediction_array['mode'][0]['route'][0]['direction'][0]['trip'][0]['vehicle']['vehicle_lat'];
+    //return $prediction_array['mode'][0]['route'][0]['direction'][0];
+    //return $prediction_array['mode'][0]['route'][0];
+    //return $prediction_array;
+    //return $prediction_array;
+    return $prediction_data;
 }
