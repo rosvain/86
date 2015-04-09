@@ -3,7 +3,7 @@
 //when user clicks direction button
 //    it switches from light teal to dark teal
 //    the other button switches from dark teal light teal
-
+var direction = 'outbound';
 $("#inbound").click(function () {
 if ($(this).hasClass("teal lighten-2")) {
         $(this).removeClass("teal lighten-2");
@@ -11,6 +11,8 @@ if ($(this).hasClass("teal lighten-2")) {
         $("#outbound").removeClass("teal darken-1");
         $("#outbound").toggleClass("teal lighten-2");
     }
+    direction = 'inbound';
+    //alert(direction);
 });
 
 $("#outbound").click(function () {
@@ -20,6 +22,8 @@ $("#outbound").click(function () {
         $("#inbound").removeClass("teal darken-1");
         $("#inbound").toggleClass("teal lighten-2");
     }
+    direction = 'outbound';
+    //alert(direction);
 });
 
 

@@ -29,23 +29,24 @@ function clean($array) {
     if (!empty($array)) {
         $clean['latitude'] = htmlentities($array['latitude'], ENT_QUOTES, "UTF-8");
         $clean['longitude'] = htmlentities($array['longitude'], ENT_QUOTES, "UTF-8");
-        $clean['direction'] = htmlentities($array['direction'], ENT_QUOTES, "UTF-8");
+        $clean['direction'] = htmlentities(strtolower($array['direction']), ENT_QUOTES, "UTF-8");
         return $clean;
     }
     return null;
 }
 
 function human_date($epoch_date) {
-    $epoch_date = (int)$epoch_date;
+    $epoch_date = (int) $epoch_date;
     $human_date = new DateTime("@$epoch_date");
     $human_date->setTimezone(new DateTimeZone('America/New_York'));
-    return $human_date->format('m-d-Y H:i:s');
+    return $human_date->format('H:i:s');
 }
 
-function get_minutes($seconds){
-    $seconds = (int)$seconds;
-    return round($seconds/60,0, PHP_ROUND_HALF_DOWN);
+function get_minutes($seconds) {
+    $seconds = (int) $seconds;
+    return round($seconds / 60, 0, PHP_ROUND_HALF_DOWN);
 }
+
 function get_data($url) {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -62,13 +63,13 @@ function get_current_station($direction, $api_location, $api_route) {
     $location_array = json_decode($api_loc_result, true);
     $route_array = json_decode($api_rout_result, true);
     $stop_location_stop_id = array_column($location_array['stop'], 'stop_id');
-    if ('Outbound' === $direction) {
+    if ('outbound' === $direction) {
         $outbound_stop_id = array_column($route_array['direction'][0]['stop'], 'stop_id');
         $matches_outbound = array_intersect($stop_location_stop_id, $outbound_stop_id);
         $key = array_keys($matches_outbound);
         return $location_array['stop'][$key[0]];
     }
-    if ('Inbound' === $direction) {
+    if ('inbound' === $direction) {
         $inbound_stop_id = array_column($route_array['direction'][1]['stop'], 'stop_id');
         $matches_inbound = array_intersect($stop_location_stop_id, $inbound_stop_id);
         $key = array_keys($matches_inbound);
@@ -80,16 +81,21 @@ function get_prediction($api) {
     $prediction_data = array();
     $data = get_data($api);
     $prediction_array = json_decode($data, true);
-    $prediction_data['sch_arr_dt'] = human_date($prediction_array['mode'][0]['route'][0]['direction'][0]['trip'][0]['sch_arr_dt']);
-    $prediction_data['pre_dt'] = human_date($prediction_array['mode'][0]['route'][0]['direction'][0]['trip'][0]['pre_dt']);
-    $prediction_data['pre_away'] = get_minutes($prediction_array['mode'][0]['route'][0]['direction'][0]['trip'][0]['pre_away']);
-    $prediction_data['vehicle_lat'] = $prediction_array['mode'][0]['route'][0]['direction'][0]['trip'][0]['vehicle']['vehicle_lat'];
-    $prediction_data['vehicle_lon'] = $prediction_array['mode'][0]['route'][0]['direction'][0]['trip'][0]['vehicle']['vehicle_lon'];
+    $prediction_data['stop_name'] = $prediction_array['stop_name'];
+    $prediction_data['stop_id'] = $prediction_array['stop_id'];
+    $prediction_data['direction'] = $prediction_array['mode'][0]['route'][0]['direction'][0]['direction_name'];
+    $len = count($prediction_array['mode'][0]['route'][0]['direction'][0]['trip']);
+    for ($i = 0; $i < $len; ++$i) {
+        $prediction_data['prediction'][$i]['trip_id'] = $prediction_array['mode'][0]['route'][0]['direction'][0]['trip'][$i]['trip_id'];
+        $prediction_data['prediction'][$i]['sch_arr_dt'] = human_date($prediction_array['mode'][0]['route'][0]['direction'][0]['trip'][$i]['sch_arr_dt']);
+        $prediction_data['prediction'][$i]['pre_dt'] = human_date($prediction_array['mode'][0]['route'][0]['direction'][0]['trip'][$i]['pre_dt']);
+        $prediction_data['prediction'][$i]['pre_away'] = get_minutes($prediction_array['mode'][0]['route'][0]['direction'][0]['trip'][$i]['pre_away']);
+        if (array_key_exists('vehicle', $prediction_array['mode'][0]['route'][0]['direction'][0]['trip'][$i])) {
+            $prediction_data['prediction'][$i]['vehicle_id'] = $prediction_array['mode'][0]['route'][0]['direction'][0]['trip'][0]['vehicle']['vehicle_id'];
+            $prediction_data['prediction'][$i]['vehicle_lat'] = $prediction_array['mode'][0]['route'][0]['direction'][0]['trip'][0]['vehicle']['vehicle_lat'];
+            $prediction_data['prediction'][$i]['vehicle_lon'] = $prediction_array['mode'][0]['route'][0]['direction'][0]['trip'][0]['vehicle']['vehicle_lon'];
+        }
+    }
     $prediction_data['alert'] = $prediction_array['alert_headers'];
-    //return $prediction_array['mode'][0]['route'][0]['direction'][0]['trip'][0]['vehicle']['vehicle_lat'];
-    //return $prediction_array['mode'][0]['route'][0]['direction'][0];
-    //return $prediction_array['mode'][0]['route'][0];
-    //return $prediction_array;
-    //return $prediction_array;
     return $prediction_data;
 }
