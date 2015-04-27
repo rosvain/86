@@ -9,13 +9,20 @@
         <header>
             <nav class="top-nav">
             </nav>
+            <div id='error' class="row center-align">
+            <p class="card-panel yellow lighten-2">Sorry, we could not get your location</p>
+            </div>
             <h1 class="center-align">86 BUS</h1>
         </header>
         <main>
+            <div id="showdata"></div>
             <div class="container section">
                 <div class="row center-align">
-                    <section class="col s6"><button id="inbound" class="waves-effect waves-light btn-large teal darken-1"><i class="mdi-maps-directions-bus left"></i>To Cleveland Circle</button></section>
-                    <section class="col s6"><button id="outbound" class="waves-effect waves-light btn-large teal lighten-2"><i class="mdi-maps-directions-bus left"></i>To Sullivan Station</button></section>
+                    <section class="col s12"><button id="direction" name='outbound' class="waves-effect waves-light btn-large teal darken-1"><i class="mdi-maps-directions-bus left"></i>To Sullivan Station</button></section>
+<!--                    <section class="col s6"><button id="outbound" class="waves-effect waves-light btn-large teal lighten-2"><i class="mdi-maps-directions-bus left"></i>To Sullivan Station</button></section>-->
+                    <div class="progress col s12">
+                        <div class="indeterminate"></div>
+                    </div>
                     <table class="col s12 hoverable bordered">
                         <thead>
                             <tr>
@@ -26,19 +33,9 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td><i class="mdi-maps-my-location left"></i>Cleveland Circle</td>
-                                <td>23 Min</td>
-                                <td>5:30PM</td>
-                            </tr>
-                            <tr>
-                                <td>Fuel Corner</td>
-                                <td>29 Min</td>
-                                <td>5:59PM</td>
-                            </tr>
-                            <tr>
-                                <td>Washington Street</td>
-                                <td>45 Min</td>
-                                <td>6:14PM</td>
+                                <td class="bus-stop"><i class="mdi-maps-my-location left"></i>Cleveland Circle</td>
+                                <td class="eta">23 Min</td>
+                                <td class="time">5:30PM</td>
                             </tr>
                         </tbody>
                     </table>
@@ -73,7 +70,8 @@
         <!--Import jQuery before materialize.js-->
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
         <script type="text/javascript" src="js/materialize.min.js"></script>
-        <script src="js/geolocation.js" type="text/javascript"></script>
-        <script src="js/direction.js" type="text/javascript"></script>
+        <script src="js/app.js" type="text/javascript"></script>
+<!--        <script src="js/geolocation.js" type="text/javascript"></script>
+        <script src="js/direction.js" type="text/javascript"></script>-->
     </body>
 </html>

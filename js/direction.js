@@ -26,4 +26,8 @@ $("#outbound").click(function () {
     //alert(direction);
 });
 
-
+var dButton = $('button');
+var consoleLog = function(){
+    console.log('this is the dbutton being clicked with an anonimus function');
+};
+dButton.click(consoleLog);

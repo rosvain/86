@@ -4,11 +4,11 @@ var options = {
     maximumAge: 0
 };
 
-function success(pos) {
-    var crd = pos.coords;
+function successPosition(currentPosition) {
+    var crd = currentPosition.coords;
     //var latitude = position.coords.latitude;
     //var longitude = position.coords.longitude;
-    alert('Latitude : ' + crd.latitude + ' Longitude: ' + crd.longitude);
+    //alert('Latitude : ' + crd.latitude + ' Longitude: ' + crd.longitude);
     console.log('Your current position is:');
     console.log('Latitude : ' + crd.latitude);
     console.log('Longitude: ' + crd.longitude);
@@ -21,5 +21,8 @@ function error(err) {
     console.warn('ERROR(' + err.code + '): ' + err.message);
 }
 ;
-
-navigator.geolocation.getCurrentPosition(success, error, options);
+if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(successPosition, error, options);
+} else {
+    var error;
+}
