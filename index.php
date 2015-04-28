@@ -4,6 +4,7 @@
         <title>86 Bus Route</title>
         <!--Import materialize.css-->
         <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
         <header>
@@ -15,7 +16,6 @@
             <h1 class="center-align">86 BUS</h1>
         </header>
         <main>
-            <div id="showdata"></div>
             <div class="container section">
                 <div class="row center-align">
                     <section class="col s12"><button id="direction" name='outbound' class="waves-effect waves-light btn-large teal darken-1"><i class="mdi-maps-directions-bus left"></i>To Sullivan Station</button></section>
@@ -71,7 +71,5 @@
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
         <script type="text/javascript" src="js/materialize.min.js"></script>
         <script src="js/app.js" type="text/javascript"></script>
-<!--        <script src="js/geolocation.js" type="text/javascript"></script>
-        <script src="js/direction.js" type="text/javascript"></script>-->
     </body>
 </html>
