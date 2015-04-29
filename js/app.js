@@ -20,9 +20,13 @@ function getBusData(latitude, longitude, direction) {
         async: true,
         dataType: "json",
         success: function (data) {
-            $('.bus-stop').text(data.stop_name).append(currentLocationIcon);
-            $('.eta').text(data.prediction[0]['pre_away']+' MIN');
-            $('.time').text(data.prediction[0]['pre_dt']);
+            $('.bus-stop').text(data.stop_name).prepend(currentLocationIcon).animate({opacity: '0.4'}, "slow").animate({opacity: '0.9'}, "slow");
+            $('.eta').text(data.prediction[0]['pre_away']+' MIN').animate({opacity: '0.4'}, "slow").animate({opacity: '0.9'}, "slow");
+            $('.time').text(data.prediction[0]['pre_dt']).animate({opacity: '0.4'}, "slow").animate({opacity: '0.9'}, "slow");
+            if (data.alert[0]){
+                $('#alert').html("<p class='card-panel yellow lighten-2'>"+data.alert[0]['header_text']+"</p>");
+                $('#alert').show();
+            }
         }
     });
 }
@@ -80,6 +84,7 @@ function initGeolocation() {
 }
 //Hiding the error message
 $('#error').hide();
+$('#alert').hide();
 //Initializing geolocation
 initGeolocation();
 //Changing directions

@@ -13,6 +13,9 @@
             <div id='error' class="row center-align">
             <p class="card-panel yellow lighten-2">Sorry, we could not get your location</p>
             </div>
+            <div id='alert' class="row center-align">
+                <p class="card-panel yellow lighten-2">Alert</p>
+            </div>
             <h1 class="center-align">86 BUS</h1>
         </header>
         <main>
