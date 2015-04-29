@@ -21,7 +21,7 @@ function getBusData(latitude, longitude, direction) {
         dataType: "json",
         success: function (data) {
             $('.bus-stop').text(data.stop_name).append(currentLocationIcon);
-            $('.eta').text(data.prediction[0]['pre_away']);
+            $('.eta').text(data.prediction[0]['pre_away']+' MIN');
             $('.time').text(data.prediction[0]['pre_dt']);
         }
     });
