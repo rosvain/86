@@ -1,1 +1,2 @@
-Using materialize to build an app to track the 86 bus line in Boston
+86 Bus is a simple mobile friendly application that predicts the estimated time of arrival in minutes and the time of arrival of the 86 bus line in Boston to the nearest 
+bus station to your current location. 
