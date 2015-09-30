@@ -1,5 +1,4 @@
 <?php
-
 //Problem: get all the data about predicting the bus details according to directiona and closest stop
 //What I know:
 //  route:86, this is constant, it will never change
@@ -25,7 +24,8 @@
 //  stops by route.
 //
 
-function clean($array) {
+function clean($array)
+{
     if (!empty($array)) {
         $clean['latitude'] = htmlentities($array['latitude'], ENT_QUOTES, "UTF-8");
         $clean['longitude'] = htmlentities($array['longitude'], ENT_QUOTES, "UTF-8");
@@ -35,19 +35,22 @@ function clean($array) {
     return null;
 }
 
-function human_date($epoch_date) {
+function human_date($epoch_date)
+{
     $epoch_date = (int) $epoch_date;
     $human_date = new DateTime("@$epoch_date");
     $human_date->setTimezone(new DateTimeZone('America/New_York'));
     return $human_date->format('H:i:s');
 }
 
-function get_minutes($seconds) {
+function get_minutes($seconds)
+{
     $seconds = (int) $seconds;
     return round($seconds / 60, 0, PHP_ROUND_HALF_DOWN);
 }
 
-function get_data($url) {
+function get_data($url)
+{
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -57,7 +60,8 @@ function get_data($url) {
     return $data;
 }
 
-function get_current_station($direction, $api_location, $api_route) {
+function get_current_station($direction, $api_location, $api_route)
+{
     $api_loc_result = get_data($api_location);
     $api_rout_result = get_data($api_route);
     $location_array = json_decode($api_loc_result, true);
@@ -77,7 +81,8 @@ function get_current_station($direction, $api_location, $api_route) {
     }
 }
 
-function get_prediction($api) {
+function get_prediction($api)
+{
     $prediction_data = array();
     $data = get_data($api);
     $prediction_array = json_decode($data, true);

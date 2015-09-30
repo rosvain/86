@@ -1,8 +1,8 @@
 <?php
 
 //setting error reporting
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
+//error_reporting(E_ALL);
+//ini_set("display_errors", 1);
 //including settings and functions
 require 'settings.php';
 require 'bus.php';
